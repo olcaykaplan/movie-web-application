@@ -1,0 +1,12 @@
+.menu{
+    
+    background-color: tomato !important;
+}
+.menu .logo{
+    height: 70px;
+}
+.toolbar{
+    display: flex;
+    margin: 0 60px;
+    justify-content: space-between;
+}

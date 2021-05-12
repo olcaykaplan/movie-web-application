@@ -1,0 +1,16 @@
+.main{
+    height: 100vh;
+    background-color: seagreen;
+}
+.header{
+ height: 7vh;
+ background-color: yellow;
+}
+.content{
+ height: 80vh;
+ background-color: lightcyan;
+}
+.footer{
+height:  13vh;
+background-color: lightblue;
+}
