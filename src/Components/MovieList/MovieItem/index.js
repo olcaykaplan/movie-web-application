@@ -7,32 +7,51 @@ import {
   Typography,
   IconButton,
   Divider,
+  Grid,
+  Box
 } from "@material-ui/core";
-import MovieFilterIcon from '@material-ui/icons/MovieFilter';
+import {MoreVert} from "@material-ui/icons";
+import Rating from '@material-ui/lab/Rating';
 
-import unnamed from "../../assets/img/unnamed.jpeg";
-const MovieList = () => {
+import classes from "./index.module.css";
+import { Link } from "react-router-dom";
+
+const MovieItem = ({ title, posterPath, voteAverage, adult, voteCount, id }) => {
+  const imgBaseUrl = "https://image.tmdb.org/t/p/w1280";
+  console.log(`key`,id);
   return (
-    <Card style={{ maxWidth: 300 }}>
-      <CardMedia title="logo">
-        <img src={unnamed} />
-      </CardMedia>
-      <CardContent>
-        <Typography variant="h5" >Title is here</Typography>
-        <Divider/>
-        <Typography variant="body2" color="textSecondary" component="p">
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the
-          mussels, if you like.
-        </Typography>
-      </CardContent>
-      <Divider />
-      <CardActions>
-        <MovieFilterIcon />
-        <Typography variant="caption">More Details</Typography>
-      </CardActions>
-    </Card>
+    <Grid
+      container
+      item
+      md={3}
+      lg={3}
+      xl={2}
+      direction="column"
+      alignItems="center"
+      justify="center"
+    >
+      <Link to={`/movies/${id}`}>
+      <Card key={id} className={classes.card}>
+        <CardMedia
+          title="card"
+          className={classes.cardMedia}
+          image={`${imgBaseUrl}${posterPath}`}
+        >
+            <MoreVert color="primary"/>
+        </CardMedia>
+        
+        <Box className={classes.boxContent}>
+          <Box className={classes.title}>{title}</Box>
+          <Divider/>
+          <Box className={classes.boxRate}>
+          <Rating name="half-rating-read" defaultValue={voteAverage/2} precision={0.5} readOnly size="small" /> 
+           <span>({voteCount})</span>
+          </Box>
+        </Box>
+      </Card>
+      </Link>
+    </Grid>
   );
 };
 
-export default MovieList;
+export default MovieItem;

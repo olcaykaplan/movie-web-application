@@ -1,0 +1,33 @@
+.cardGrid{
+    justify-content: center;
+}
+.card{
+    width: 220px;
+    height: 350px;
+}
+.cardMedia{
+    width: 220px;
+    height: 280px;
+   
+}
+.cardMedia img{
+   object-fit: cover;
+}
+
+.boxContent{
+text-align: center;
+align-items: center;
+height: 70px;
+font-size: 14px;
+font-weight: bold;
+background-color: #ff917e  !important;
+}
+.boxRate{
+    font-size: small;
+    font-weight: normal;
+    display: inline-flex;
+}
+.title{
+    height: 55%;
+    padding: 5px 0;
+}

@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+
+import MovieItem from "./MovieItem";
+
 import axios from "axios";
 import {
   Card,
@@ -8,40 +11,45 @@ import {
   Typography,
   IconButton,
   Divider,
+  Grid
 } from "@material-ui/core";
 import MovieFilterIcon from "@material-ui/icons/MovieFilter";
 
-import unnamed from "../../assets/img/unnamed.jpeg";
 const MovieList = () => {
- const  [popularMovieList, setPopularMovieList] = useState([]);
- const  [topRatedMovieList, setTopRatedMovieList] = useState([]);
+  const [popularMovieList, setPopularMovieList] = useState([]);
+  const [topRatedMovieList, setTopRatedMovieList] = useState([]);
 
- 
   const fetchMovieList = async () => {
-      axios.get("https://api.themoviedb.org/3/movie/popular?api_key=201644f743b0d24a770d286005c9c5b8&language=en-US&page=1")
-        .then((res) => {
-            console.log("popular movies: ",res.data.results[0])
-
-            setPopularMovieList(res.data.results)
-        })
-      
+    axios
+      .get(
+        "https://api.themoviedb.org/3/movie/popular?api_key=201644f743b0d24a770d286005c9c5b8&language=en-US&page=1"
+      )
+      .then((res) => {
+        console.log("popular movies: ", res.data.results[0]);
+        setPopularMovieList(res.data.results);
+      });
   };
- 
+
   useEffect(() => {
     fetchMovieList();
   }, []);
 
-  return(
-      <>
-      {(popularMovieList || []).map((m,index) => (
-          <>
-          <span>{index}</span>
-          <br/>
-          </>
+  return (
+    
+    <Grid container spacing={3} lg={10} xl={10}>
+      {(popularMovieList || []).map((m) => (
+        <MovieItem
+          title={m.title}
+          posterPath={m.poster_path}
+          voteAverage={m.vote_average}
+          voteCount={m.vote_count}
+          id={m.id}
+          adult={m.adult}
+        />
       ))}
-     <h1>deneme</h1>
-     </>
+    </Grid>
   );
 };
 
 export default MovieList;
+
