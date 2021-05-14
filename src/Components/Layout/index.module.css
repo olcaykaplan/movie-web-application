@@ -1,14 +1,17 @@
-.main{
-    height: 100vh;
-    background-color: rgba(255, 255, 255, 0.938);
+.main {
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.938);
 }
-.header{
- height: 7vh;
- margin-bottom: 50px;
+.header {
+  height: 7vh;
 }
+
 .content{
+  min-height: 80vh;
 }
-.footer{
-   height: 100px;
-background-color: lightslategray;
+
+.footer {
+  height: 9vh;
+  background-color: #101010;
+  color: white;
 }

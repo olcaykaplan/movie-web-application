@@ -1,9 +1,11 @@
 .menu{
     
-    background-color: tomato !important;
+    background-color: #101010 !important;
 }
 .menu .logo{
     height: 70px;
+    filter: brightness(0) invert(1);
+
 }
 .toolbar{
     display: flex;
