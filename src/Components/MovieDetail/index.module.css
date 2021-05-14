@@ -1,0 +1,23 @@
+.cardMedia {
+  width: 100%;
+}
+.content img {
+  width: 100%;
+}
+.poster {
+}
+.poster img {
+}
+.poster h1 {
+}
+.details {
+ 
+  padding: 0 20px;
+  background-color:#101010 !important;
+  height: 100%;
+  color: #df9711fa !important;
+}
+
+.details img{
+  width: 40px;
+}

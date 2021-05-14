@@ -1,6 +1,9 @@
 .cardGrid{
     justify-content: center;
 }
+.content{
+    margin: 40px 0;
+}
 .card{
     width: 220px;
     height: 350px;
@@ -13,14 +16,23 @@
 .cardMedia img{
    object-fit: cover;
 }
-
+.movieDate{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    color: white;
+    background-color: rgba(10,10,10, 0.4);
+    font-size: 14px  !important;
+    font-weight: bold !important;
+}
 .boxContent{
 text-align: center;
 align-items: center;
 height: 70px;
 font-size: 14px;
 font-weight: bold;
-background-color: #ff917e  !important;
+background-color: rgba(10,10,10, 0.8)  !important;
+color:white
 }
 .boxRate{
     font-size: small;

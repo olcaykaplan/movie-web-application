@@ -10,15 +10,15 @@ import {
   Grid,
   Box
 } from "@material-ui/core";
-import {MoreVert} from "@material-ui/icons";
+import {Event} from "@material-ui/icons";
 import Rating from '@material-ui/lab/Rating';
-
 import classes from "./index.module.css";
 import { Link } from "react-router-dom";
 
-const MovieItem = ({ title, posterPath, voteAverage, adult, voteCount, id }) => {
+const MovieItem = ({ title, releaseDate, posterPath, voteAverage, voteCount, id }) => {
   const imgBaseUrl = "https://image.tmdb.org/t/p/w1280";
   console.log(`key`,id);
+ 
   return (
     <Grid
       container
@@ -30,14 +30,17 @@ const MovieItem = ({ title, posterPath, voteAverage, adult, voteCount, id }) => 
       alignItems="center"
       justify="center"
     >
-      <Link to={`/movies/${id}`}>
+      <Link to={`/movies/${id}`} style={{textDecoration:"none"}}>
       <Card key={id} className={classes.card}>
         <CardMedia
           title="card"
           className={classes.cardMedia}
           image={`${imgBaseUrl}${posterPath}`}
         >
-            <MoreVert color="primary"/>
+          <Box className={classes.movieDate}>
+          <Event fontSize="small"/>
+          <Typography variant="caption">{releaseDate}</Typography>
+          </Box>
         </CardMedia>
         
         <Box className={classes.boxContent}>
