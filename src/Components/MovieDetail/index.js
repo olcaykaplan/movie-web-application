@@ -6,7 +6,6 @@ import {
   Typography,
   Link,
   CircularProgress,
-  Card,
 } from "@material-ui/core";
 import { Event, Movie, Star } from "@material-ui/icons";
 
@@ -17,7 +16,6 @@ import axios from "axios";
 import { baseUrl, apikey, imgBaseUrlDetail, language } from "../../api/index";
 
 import classes from "./index.module.css";
-import { findDOMNode } from "react-dom";
 
 const MovieDetail = ({ match }) => {
   const [movie, setMovie] = useState({});
@@ -88,7 +86,6 @@ const MovieDetail = ({ match }) => {
   const fetchMovieVideo = async (id) => {
     try {
       //fetch movie's video by movie id
-      console.log(" url: ", baseUrl + id + "/videos" + apikey + language);
       const data = await axios
         .get(baseUrl + id + "/videos" + apikey + language)
         .then((res) => {
@@ -108,7 +105,6 @@ const MovieDetail = ({ match }) => {
       const data = await axios
         .get(baseUrl + id + "/similar" + apikey + language + "page=1")
         .then((res) => {
-          console.log("res", res);
           return res.data.results;
         });
       return data;

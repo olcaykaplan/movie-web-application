@@ -16,7 +16,6 @@ const breakPoints = [
 ];
 
 const RelationalMovies = ({ content }) => {
-  console.log("relational content",content);
   return (
     <Grid
       item

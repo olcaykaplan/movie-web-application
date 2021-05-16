@@ -6,7 +6,6 @@ import {
   CardMedia,
   Typography,
   Box,
-  Modal,
 } from "@material-ui/core";
 
 import jumbotron from "../../../assets/img/jumbotron.png";
