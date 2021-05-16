@@ -5,10 +5,9 @@
 .menu .logo{
     height: 70px;
     filter: brightness(0) invert(1);
-
 }
 .toolbar{
     display: flex;
-    margin: 0 60px;
+    margin: 0 60px; 
     justify-content: space-between;
 }
