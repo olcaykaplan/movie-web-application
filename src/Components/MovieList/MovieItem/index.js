@@ -14,28 +14,19 @@ import {Event} from "@material-ui/icons";
 import Rating from '@material-ui/lab/Rating';
 import classes from "./index.module.css";
 import { Link } from "react-router-dom";
+import { imgBaseUrlPoster } from "../../../api/index";
+
 
 const MovieItem = ({ title, releaseDate, posterPath, voteAverage, voteCount, id }) => {
-  const imgBaseUrl = "https://image.tmdb.org/t/p/w1280";
-  console.log(`key`,id);
  
   return (
-    <Grid
-      container
-      item
-      md={3}
-      lg={3}
-      xl={2}
-      direction="column"
-      alignItems="center"
-      justify="center"
-    >
+    
       <Link to={`/movies/${id}`} style={{textDecoration:"none"}}>
       <Card key={id} className={classes.card}>
         <CardMedia
           title="card"
           className={classes.cardMedia}
-          image={`${imgBaseUrl}${posterPath}`}
+          image={`${imgBaseUrlPoster}${posterPath}`}
         >
           <Box className={classes.movieDate}>
           <Event fontSize="small"/>
@@ -53,7 +44,6 @@ const MovieItem = ({ title, releaseDate, posterPath, voteAverage, voteCount, id 
         </Box>
       </Card>
       </Link>
-    </Grid>
   );
 };
 

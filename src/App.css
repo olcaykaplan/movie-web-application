@@ -1,8 +1,10 @@
+html{
+  scroll-behavior: smooth;
+}
 body{
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Oswald', sans-serif !important;
   margin: 0;
   padding: 0;
-  background-color: rgba(10,10,10, 0.8) im !important;
 }
 .App {
   text-align: center;
