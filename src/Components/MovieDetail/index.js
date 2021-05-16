@@ -29,9 +29,9 @@ const MovieDetail = ({ match }) => {
     const credits = await fetchCredits(id);
     const video = await fetchMovieVideo(id);
     const dataRelationalMovies = await fetchRelationalMovies(id);
-
+    const videoPath = video && video.key ? video.key : false;
     setRelationalMovies(dataRelationalMovies);
-    setMovie({ ...movie, credits, videoPath: video.key });
+    setMovie({ ...movie, credits, videoPath });
     //make loading false and show data
     setLoading(false);
   };
@@ -52,7 +52,7 @@ const MovieDetail = ({ match }) => {
   };
   const fetchCredits = async (id) => {
     try {
-       //fetch actors by movie id
+      //fetch actors by movie id
       const data = await axios
         .get(baseUrl + id + "/credits" + apikey + language)
         .then((res) => {
@@ -88,6 +88,7 @@ const MovieDetail = ({ match }) => {
   const fetchMovieVideo = async (id) => {
     try {
       //fetch movie's video by movie id
+      console.log(" url: ", baseUrl + id + "/videos" + apikey + language);
       const data = await axios
         .get(baseUrl + id + "/videos" + apikey + language)
         .then((res) => {
@@ -116,18 +117,18 @@ const MovieDetail = ({ match }) => {
     }
   };
   useEffect(() => {
-     //when the match change;
-    
-     //before fetching show loading
-      setLoading(true);
-     // it will take you to the top of the page after click an similar movie  
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
+    //when the match change;
+
+    //before fetching show loading
+    setLoading(true);
+    // it will take you to the top of the page after click an similar movie
+   /* window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });*/
     //fetch data will work
     if (match.params.movieId) fetchData(match.params.movieId);
-  }, [match]);
+  }, []);
 
   return (
     <>
@@ -142,18 +143,23 @@ const MovieDetail = ({ match }) => {
           <CircularProgress />
         </Grid>
       ) : (
-        <Grid
-          container
-          item
-          className={classes.content}
-        >
-          <Grid container item xl={9} lg={8} md={8} sm={12} xs={12} className={classes.poster}>
+        <Grid container item className={classes.content}>
+          <Grid
+            container
+            item
+            xl={9}
+            lg={8}
+            md={8}
+            sm={12}
+            xs={12}
+            className={classes.poster}
+          >
             <img src={movie.imgBackground} />
           </Grid>
           <Grid container item xl={3} lg={4} md={4} sm={12} xs={12}>
             <Paper
               square
-              className={[classes.details, classes.paperBackgroundColor].join(' ')}
+              className={[classes.details, classes.paperBackgroundColor].splice(',')}
             >
               <Grid
                 container
@@ -165,38 +171,30 @@ const MovieDetail = ({ match }) => {
                   </Box>
                   <Typography variant="caption">{movie.tagline}</Typography>
                 </Grid>
-                <Grid
-                  item
-                  sm={12}
-                  xs={12}
-                  md={12}
-                  lg={6}
-                  xl={6}
-                >
-                  <Box
-                    className={[classes.colorWhite, classes.flex].join(' ')}
-                  >
+                <Grid item sm={12} xs={12} md={12} lg={6} xl={6}>
+                  <Box className={[classes.colorWhite, classes.flex].splice(',')}>
                     <Event />
                     <Typography>Related Date : {movie.release_date}</Typography>
                   </Box>
-
-                  <Box
-                    className={[classes.movieStatus, classes.flex].join(' ')}
-                  >
-                    <Movie />
-                    <Typography variant="body1">
-                      <Link href="#video" underline="always" color="inherit">
-                        Watch Trailer
-                      </Link>
-                    </Typography>
-                  </Box>
+                  {movie.videoPath ? (
+                    <Box
+                      className={[classes.movieStatus, classes.flex].splice(',')}
+                    >
+                      <Movie />
+                      <Typography variant="body1">
+                        <Link href="#video" underline="always" color="inherit">
+                          Watch Trailer
+                        </Link>
+                      </Typography>
+                    </Box>
+                  ) : null}
                 </Grid>
                 <div style={{ width: "100%" }}>
                   <Typography variant="h4" className={classes.colorWhite}>
                     {movie.title}
                   </Typography>
                 </div>
-                <Box className={[classes.flex, classes.rating].join(' ')}>
+                <Box className={[classes.flex, classes.rating].splice(',')}>
                   <Star fontSize="large" />
                   <Typography variant="h4">({movie.vote_average})</Typography>
                 </Box>
@@ -222,13 +220,23 @@ const MovieDetail = ({ match }) => {
               <Typography className={classes.colorWhite}>Actors:</Typography>
               <Box className={classes.flex}>
                 {(movie.credits?.actors || []).map((a) => (
-                  <Profile key={a.id} title={a.name} src={a.profile_path} size="large" />
+                  <Profile
+                    key={a.id}
+                    title={a.name}
+                    src={a.profile_path}
+                    size="large"
+                  />
                 ))}
               </Box>
               <Typography className={classes.colorWhite}>Director:</Typography>
               <Box className={classes.flex}>
                 {(movie.credits?.director || []).map((d) => (
-                  <Profile key={d.id} title={d.name} src={d.profile_path} size="large" />
+                  <Profile
+                    key={d.id}
+                    title={d.name}
+                    src={d.profile_path}
+                    size="large"
+                  />
                 ))}
               </Box>
             </Paper>
@@ -236,16 +244,11 @@ const MovieDetail = ({ match }) => {
           {relationalMovies.length > 0 ? (
             <RelationalMovies content={relationalMovies} />
           ) : null}
-          <Grid
-            item
-            xl={12}
-            lg={12}
-            md={12}
-            sm={12}
-            xs={12}
-          >
-            <IframeTemp path={movie.videoPath} />
-          </Grid>
+          {movie.videoPath ? (
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <IframeTemp path={movie.videoPath} />
+            </Grid>
+          ) : null}
         </Grid>
       )}
     </>
