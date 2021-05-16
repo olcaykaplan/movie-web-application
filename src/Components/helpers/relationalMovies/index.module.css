@@ -1,0 +1,15 @@
+.relationalGrid{
+    padding-top: 80px;
+    background-color: #101010;
+}
+.carouselBoxColor{
+background-color: rgba(255, 180, 0, 7);
+}
+.carousel{
+  padding-top: 30px ;
+  padding-bottom:30px;
+}
+h1{
+    padding-left: 5%;
+    padding-bottom: 1%;
+  }

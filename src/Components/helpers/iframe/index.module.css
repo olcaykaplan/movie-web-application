@@ -1,0 +1,26 @@
+.paperBackgroundColor {
+  background-color: #101010 !important;
+  padding: 80px 0;
+  border-radius: 0;
+  color:white  !important
+}
+
+h1{
+  padding-left: 5%;
+  padding-bottom: 1%;
+}
+
+.videoWrapper {
+   
+    overflow: hidden;
+    padding-top: 56.25%;
+    position: relative;
+}
+.video {
+   border:0;
+   height: 70%;
+   left: 15%;
+   top: 0;
+   position: absolute;
+   width: 70%;
+}

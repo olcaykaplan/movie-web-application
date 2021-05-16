@@ -1,0 +1,12 @@
+.imageCard{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    height: 340px;
+}
+
+.imageCardMedia{
+    height: 100%;
+    filter: grayscale(10%);
+    color:white;
+}
