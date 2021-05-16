@@ -1,93 +1,254 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Paper, CardMedia, Typography } from "@material-ui/core";
-import imdb from '../../assets/img/imbd.jpeg'
+import {
+  Grid,
+  Paper,
+  Box,
+  Typography,
+  Link,
+  CircularProgress,
+  Card,
+} from "@material-ui/core";
+import { Event, Movie, Star } from "@material-ui/icons";
+
+import Profile from "../helpers/profile/";
+import IframeTemp from "../helpers/iframe/";
+import RelationalMovies from "../helpers/relationalMovies/";
 import axios from "axios";
+import { baseUrl, apikey, imgBaseUrlDetail, language } from "../../api/index";
 
 import classes from "./index.module.css";
+import { findDOMNode } from "react-dom";
+
 const MovieDetail = ({ match }) => {
   const [movie, setMovie] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [relationalMovies, setRelationalMovies] = useState([]);
 
-  const fetchMovie = async (id) => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${id}?api_key=201644f743b0d24a770d286005c9c5b8`
-      )
-      .then((res) => {
-        // get poster and backposter by paths
-        const imgBackground = `https://image.tmdb.org/t/p/original/${res.data.backdrop_path}`;
-        const poster = `https://image.tmdb.org/t/p/original/${res.data.poster_path}`;
-      
-        //fetch actors by movie id
-        let credits =  {actors:[], director:[]}
-        axios.get(`https://api.themoviedb.org/3/movie/${res.data.id}/credits?api_key=201644f743b0d24a770d286005c9c5b8&language=en-US`)
-        .then((res) => {
-          credits.director = res.data.crew.filter( d => d.job ==="Director")
+  const fetchData = async (id) => {
+    const movie = await fetchMovie(id);
+    const credits = await fetchCredits(id);
+    const video = await fetchMovieVideo(id);
+    const dataRelationalMovies = await fetchRelationalMovies(id);
 
-          res.data.cast.map( a => {
-            let {name, id, profile_path, popularity, character} = a;
-            let  minValue = Math.min(...credits.actors.map(a => a.popularity))
-              if(credits.actors.length < 6){
-                credits.actors.push({popularity})
-              }
-              else if (popularity > minValue){
-                credits.actors[credits.actors.findIndex( a => a.popularity === minValue)] = {name, id, profile_path, popularity, character};
-
-              }  
-          })
-          console.log("director",credits.director)
-          console.log("actors",credits.actors.map(x => x.popularity))
-
-        })
-
-        // set movie details 
-        setMovie({ ...res.data, imgBackground, poster, });
-      })
-      .catch((e) => {
-        console.log("error", e.message);
-      });
-
-      
+    setRelationalMovies(dataRelationalMovies);
+    setMovie({ ...movie, credits, videoPath: video.key });
+    //make loading false and show data
+    setLoading(false);
   };
 
+  const fetchMovie = async (id) => {
+    try {
+      //fetch movie details by movie id
+      const data = axios.get(baseUrl + id + apikey).then((res) => {
+        // get poster and backposter by paths
+        const imgBackground = imgBaseUrlDetail + res.data.backdrop_path;
+        const poster = imgBaseUrlDetail + res.data.poster_path;
+        return { ...res.data, imgBackground, poster };
+      });
+      return data;
+    } catch (error) {
+      console.log("Error Fetch Movie :", error.message);
+    }
+  };
+  const fetchCredits = async (id) => {
+    try {
+       //fetch actors by movie id
+      const data = await axios
+        .get(baseUrl + id + "/credits" + apikey + language)
+        .then((res) => {
+          let credits = { actors: [], director: [] };
+          //filter crews job to find director/s
+          credits.director = res.data.crew.filter((d) => d.job === "Director");
+
+          //mapping 6 actors by sorting their popularity value
+          res.data.cast.map((a) => {
+            let { name, id, profile_path, popularity, character } = a;
+            let minValue = Math.min(...credits.actors.map((a) => a.popularity));
+            if (credits.actors.length < 6) {
+              credits.actors.push({
+                name,
+                id,
+                profile_path,
+                popularity,
+                character,
+              });
+            } else if (popularity > minValue) {
+              credits.actors[
+                credits.actors.findIndex((a) => a.popularity === minValue)
+              ] = { name, id, profile_path, popularity, character };
+            }
+          });
+          return credits;
+        });
+      return data;
+    } catch (error) {
+      console.log("Error Fetch Credits :", error.message);
+    }
+  };
+  const fetchMovieVideo = async (id) => {
+    try {
+      //fetch movie's video by movie id
+      const data = await axios
+        .get(baseUrl + id + "/videos" + apikey + language)
+        .then((res) => {
+          // there may be more than one video
+          // but send first item to show
+          return res.data.results[0];
+        });
+      return data;
+    } catch (error) {
+      console.log("Error Fetch Movie Video:", error.message);
+    }
+  };
+
+  const fetchRelationalMovies = async (id) => {
+    try {
+      //fetch similar movies of chosen movie by movie id
+      const data = await axios
+        .get(baseUrl + id + "/similar" + apikey + language + "page=1")
+        .then((res) => {
+          console.log("res", res);
+          return res.data.results;
+        });
+      return data;
+    } catch (err) {
+      console.log("Error Fetch Relational Movies:", err.message);
+    }
+  };
   useEffect(() => {
-    //when the page loading this will work and try to fetch data
-    //https://www.imdb.com/title/titleIdHere
-    //genres  an array  genres > id,name
-    //spoken languages an array  spoken_languages
-    if (match.params.movieId) fetchMovie(match.params.movieId);
-  }, []);
+     //when the match change;
+    
+     //before fetching show loading
+      setLoading(true);
+     // it will take you to the top of the page after click an similar movie  
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    //fetch data will work
+    if (match.params.movieId) fetchData(match.params.movieId);
+  }, [match]);
 
   return (
-    <Grid container item xl={12} lg={12} md={12} className={classes.content}>
-      <Grid container item xl={9} lg={9} md={9} className={classes.poster}>
-        <img src={movie.imgBackground} />
-      </Grid>
-      <Grid
-        container
-        item
-        xl={3}
-        lg={3}
-        md={3}
-        style={{backgroundColor:"#101010"}}
-      >
-        <Paper className={classes.details}>
-          <h1>{movie.title}</h1>
-          <p> poster {movie.poster_path}</p>
-          <p> Tagline : {movie.tagline}</p>
-          <img src={imdb}/>
-          <p>relase date {movie.release_date}</p>
-          <p>overview {movie.overview}</p>
-          <p>O. language {movie.original_language}</p>
-          <p>imdb id {movie.imdb_id}</p>
-          <p>status {movie.status}</p>
-          <p>average {movie.vote_average}</p>
-          <p> count {movie.vote_count}</p>
-          <p>maker</p>
-          <p>video</p>
-          <p>actors</p>
-        </Paper>
-      </Grid>
-    </Grid>
+    <>
+      {loading ? (
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          justify="center"
+          style={{ minHeight: "84vh" }}
+        >
+          <CircularProgress />
+        </Grid>
+      ) : (
+        <Grid
+          container
+          item
+          className={classes.content}
+        >
+          <Grid container item xl={9} lg={8} md={8} sm={12} xs={12} className={classes.poster}>
+            <img src={movie.imgBackground} />
+          </Grid>
+          <Grid container item xl={3} lg={4} md={4} sm={12} xs={12}>
+            <Paper
+              square
+              className={[classes.details, classes.paperBackgroundColor].join(' ')}
+            >
+              <Grid
+                container
+                style={{ paddingTop: 20, borderRadius: "0 !important" }}
+              >
+                <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                  <Box className={classes.detailsPoster}>
+                    <img src={movie.poster} />
+                  </Box>
+                  <Typography variant="caption">{movie.tagline}</Typography>
+                </Grid>
+                <Grid
+                  item
+                  sm={12}
+                  xs={12}
+                  md={12}
+                  lg={6}
+                  xl={6}
+                >
+                  <Box
+                    className={[classes.colorWhite, classes.flex].join(' ')}
+                  >
+                    <Event />
+                    <Typography>Related Date : {movie.release_date}</Typography>
+                  </Box>
+
+                  <Box
+                    className={[classes.movieStatus, classes.flex].join(' ')}
+                  >
+                    <Movie />
+                    <Typography variant="body1">
+                      <Link href="#video" underline="always" color="inherit">
+                        Watch Trailer
+                      </Link>
+                    </Typography>
+                  </Box>
+                </Grid>
+                <div style={{ width: "100%" }}>
+                  <Typography variant="h4" className={classes.colorWhite}>
+                    {movie.title}
+                  </Typography>
+                </div>
+                <Box className={[classes.flex, classes.rating].join(' ')}>
+                  <Star fontSize="large" />
+                  <Typography variant="h4">({movie.vote_average})</Typography>
+                </Box>
+              </Grid>
+              <Typography variant="subtitle2" className={classes.colorWhite}>
+                Genres:
+                {(movie.genres || []).map((g, index) =>
+                  index !== movie.genres.length - 1 ? `${g.name}, ` : g.name
+                )}
+              </Typography>
+              {relationalMovies.length > 0 ? (
+                <Typography
+                  variant="subtitle2"
+                  style={{ paddingBottom: "10px" }}
+                >
+                  <Link href="#smilarMovies" underline="always" color="inherit">
+                    Check Similar Movies
+                  </Link>
+                </Typography>
+              ) : null}
+              <Typography>{movie.overview}</Typography>
+              <hr />
+              <Typography className={classes.colorWhite}>Actors:</Typography>
+              <Box className={classes.flex}>
+                {(movie.credits?.actors || []).map((a) => (
+                  <Profile key={a.id} title={a.name} src={a.profile_path} size="large" />
+                ))}
+              </Box>
+              <Typography className={classes.colorWhite}>Director:</Typography>
+              <Box className={classes.flex}>
+                {(movie.credits?.director || []).map((d) => (
+                  <Profile key={d.id} title={d.name} src={d.profile_path} size="large" />
+                ))}
+              </Box>
+            </Paper>
+          </Grid>
+          {relationalMovies.length > 0 ? (
+            <RelationalMovies content={relationalMovies} />
+          ) : null}
+          <Grid
+            item
+            xl={12}
+            lg={12}
+            md={12}
+            sm={12}
+            xs={12}
+          >
+            <IframeTemp path={movie.videoPath} />
+          </Grid>
+        </Grid>
+      )}
+    </>
   );
 };
 

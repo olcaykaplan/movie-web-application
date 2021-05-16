@@ -1,23 +1,42 @@
+
 .cardMedia {
   width: 100%;
 }
 .content img {
   width: 100%;
 }
-.poster {
-}
-.poster img {
-}
-.poster h1 {
+
+.paperBackgroundColor{
+  background-color:#101010 !important;
 }
 .details {
- 
   padding: 0 20px;
-  background-color:#101010 !important;
   height: 100%;
   color: #df9711fa !important;
 }
-
-.details img{
-  width: 40px;
+.flex{
+  display: flex;
 }
+.colorWhite{
+  color:white;
+}
+.detailsPoster img{
+  width: 160px !important;
+}
+
+.movieStatus{
+  justify-content: center !important;
+  color:inherit;
+}
+.rating{
+  background-color: inherit !important;
+  color:#ffb400;
+  padding-top: 15px;
+  padding-bottom: 25px;
+}
+.rating h4 {
+  color:white;
+  font-family: 'Oswald', sans-serif;
+
+}
+
