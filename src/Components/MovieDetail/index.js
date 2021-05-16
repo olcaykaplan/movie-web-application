@@ -128,7 +128,7 @@ const MovieDetail = ({ match }) => {
     });*/
     //fetch data will work
     if (match.params.movieId) fetchData(match.params.movieId);
-  }, []);
+  }, [match.params.movieId]);
 
   return (
     <>
@@ -159,11 +159,11 @@ const MovieDetail = ({ match }) => {
           <Grid container item xl={3} lg={4} md={4} sm={12} xs={12}>
             <Paper
               square
-              className={[classes.details, classes.paperBackgroundColor].splice(',')}
+              className={[classes.details, classes.paperBackgroundColor].join(" ")}
             >
               <Grid
                 container
-                style={{ paddingTop: 20, borderRadius: "0 !important" }}
+                style={{ paddingTop: 40}}
               >
                 <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
                   <Box className={classes.detailsPoster}>
@@ -172,13 +172,13 @@ const MovieDetail = ({ match }) => {
                   <Typography variant="caption">{movie.tagline}</Typography>
                 </Grid>
                 <Grid item sm={12} xs={12} md={12} lg={6} xl={6}>
-                  <Box className={[classes.colorWhite, classes.flex].splice(',')}>
+                  <Box className={[classes.colorWhite, classes.flex].join(" ")}>
                     <Event />
                     <Typography>Related Date : {movie.release_date}</Typography>
                   </Box>
                   {movie.videoPath ? (
                     <Box
-                      className={[classes.movieStatus, classes.flex].splice(',')}
+                      className={[classes.movieStatus, classes.flex].join(" ")}
                     >
                       <Movie />
                       <Typography variant="body1">
@@ -194,7 +194,7 @@ const MovieDetail = ({ match }) => {
                     {movie.title}
                   </Typography>
                 </div>
-                <Box className={[classes.flex, classes.rating].splice(',')}>
+                <Box className={[classes.flex, classes.rating].join(" ")}>
                   <Star fontSize="large" />
                   <Typography variant="h4">({movie.vote_average})</Typography>
                 </Box>
