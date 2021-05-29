@@ -3,11 +3,11 @@ import axios from "axios";
 import { baseUrl, apikey, language } from "../../api/index";
 
 import MovieItem from "./MovieItem";
+import MovieItemSkeleton from "./MovieItem/index.skeleton";
 import JumbotronCard from "../helpers/jumbotron";
 
 import {
   Grid,
-  CircularProgress,
   TextField,
   makeStyles,
 } from "@material-ui/core";
@@ -26,6 +26,7 @@ const MovieList = () => {
   const [popularMovieList, setPopularMovieList] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [loading, setLoading] = useState(true);
+  const skeletonCount = Array.apply(null, Array(20));
   const movieListTypes = [
     { type: "Popular", value: "popular" },
     { type: "Top Rated", value: "top_rated" },
@@ -53,7 +54,7 @@ const MovieList = () => {
     setMovieListType(newValue);
     // after chose new movie list type, set page is 1
     setPageNumber(1);
-    // accoridng to this information fetch data 
+    // accoridng to this information fetch data
     fetchMovieList(newValue.value);
   };
   const handlePageNumber = (event, pageNum) => {
@@ -61,9 +62,9 @@ const MovieList = () => {
 
     // first make loading false and show loading CircularProgress
     setLoading(true);
-    // set pageNum 
+    // set pageNum
     setPageNumber(pageNum);
-    
+
     // accoridng to this information fetch data
     fetchMovieList(movieListType.value, pageNum);
   };
@@ -75,10 +76,8 @@ const MovieList = () => {
     fetchMovieList();
   }, []);
 
-  return (
-    <>
-      {loading ? (
-        <Grid
+  /*
+       <Grid
           container
           direction="column"
           alignItems="center"
@@ -87,56 +86,77 @@ const MovieList = () => {
         >
           <CircularProgress />
         </Grid>
+  */
+  return (
+    <Grid
+      container
+      spacing={3}
+      xl={10}
+      lg={10}
+      md={10}
+      sm={10}
+      xs={10}
+      style={{ marginBottom: "20px" }}
+    >
+      <JumbotronCard />
+      <Grid
+        container
+        item
+        xl={12}
+        lg={12}
+        md={12}
+        sm={12}
+        xs={12}
+        direction="row"
+        alignItems="center"
+        justify="space-between"
+        className={classes.filterGrid}
+      >
+        <Autocomplete
+          id="combo-box-demo"
+          options={movieListTypes}
+          autoHighlight
+          value={movieListType}
+          onChange={(event, newValue) => {
+            fetchMovieListTypeHandle(newValue);
+          }}
+          getOptionLabel={(option) => option.type}
+          style={{ width: 300 }}
+          renderInput={(params) => (
+            <TextField {...params} label="List" variant="outlined" />
+          )}
+        />
+        <div>
+          <Pagination
+            count={5}
+            page={pageNumber}
+            color="primary"
+            onChange={handlePageNumber}
+          />
+        </div>
+      </Grid>
+      {loading ? (
+        <>
+          {skeletonCount.map((val, idx) => (
+            <Grid
+              container
+              item
+              xl={2}
+              lg={3}
+              md={4}
+              sm={4}
+              xs={12}
+              direction="column"
+              alignItems="center"
+              justify="center"
+            >
+              <MovieItemSkeleton />
+            </Grid>
+          ))}
+        </>
       ) : (
-        <Grid
-          container
-          spacing={3}
-          xl={10}
-          lg={10}
-          md={10}
-          sm={10}
-          xs={10}
-          style={{ marginBottom: "20px" }}
-        >
-          <JumbotronCard />
-          <Grid
-            container
-            item
-            xl={12}
-            lg={12}
-            md={12}
-            sm={12}
-            xs={12}
-            direction="row"
-            alignItems="center"
-            justify="space-between"
-            className={classes.filterGrid}
-          >
-            <Autocomplete
-              id="combo-box-demo"
-              options={movieListTypes}
-              autoHighlight
-              value={movieListType}
-              onChange={(event, newValue) => {
-                fetchMovieListTypeHandle(newValue);
-              }}
-              getOptionLabel={(option) => option.type}
-              style={{ width: 300 }}
-              renderInput={(params) => (
-                <TextField {...params} label="List" variant="outlined" />
-              )}
-            />
-            <div>
-              <Pagination
-                count={5}
-                page={pageNumber}
-                color="primary"
-                onChange={handlePageNumber}
-              />
-            </div>
-          </Grid>
-
-          {(popularMovieList || []).map((m,index) => (
+        <>
+          {(popularMovieList || []).map((m, index) => (
             <Grid
               container
               item
@@ -159,28 +179,28 @@ const MovieList = () => {
               />
             </Grid>
           ))}
-          <Grid
-            container
-            item
-            xl={12}
-            lg={12}
-            md={12}
-            sm={12}
-            xs={12}
-            direction="row"
-            alignItems="center"
-            justify="center"
-          >
-            <Pagination
-              count={5}
-              page={pageNumber}
-              color="primary"
-              onChange={handlePageNumber}
-            />
-          </Grid>
-        </Grid>
+        </>
       )}
-    </>
+      <Grid
+        container
+        item
+        xl={12}
+        lg={12}
+        md={12}
+        sm={12}
+        xs={12}
+        direction="row"
+        alignItems="center"
+        justify="center"
+      >
+        <Pagination
+          count={5}
+          page={pageNumber}
+          color="primary"
+          onChange={handlePageNumber}
+        />
+      </Grid>
+    </Grid>
   );
 };
 

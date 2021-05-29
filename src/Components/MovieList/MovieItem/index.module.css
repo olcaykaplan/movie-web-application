@@ -9,8 +9,8 @@
     height: 350px;
 }
 .cardMedia{
-    width: 220px;
-    height: 280px;
+    width: 220px !important;
+    height: 280px  !important;
    
 }
 .cardMedia img{
@@ -37,9 +37,19 @@ color:white
 .boxRate{
     font-size: small;
     font-weight: normal;
-    display: inline-flex;
+    display: inline-flex; 
 }
 .title{
     height: 55%;
     padding: 5px 0;
+}
+.skeletonTitle{
+    height: 10px  !important;
+    text-align: center !important;
+    margin: 20px !important;
+}
+.skeletonBoxRate{
+    align-items: center;
+    display: flex ;
+    justify-content: center;
 }
