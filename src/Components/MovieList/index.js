@@ -116,6 +116,7 @@ const MovieList = () => {
           id="combo-box-demo"
           options={movieListTypes}
           autoHighlight
+          disableClearable
           value={movieListType}
           onChange={(event, newValue) => {
             fetchMovieListTypeHandle(newValue);
